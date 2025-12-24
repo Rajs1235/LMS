@@ -1,22 +1,48 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
 
 const app = express();
-app.use(cors({
-  origin: ['http://localhost:5173','https://694b93cf622bb9ee950b2284--charming-sfogliatella-c05b17.netlify.app' ],// Allow your Vite frontend
-  methods: ['GET', 'POST', 'PATCH', 'DELETE','PUT','OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+
+/**
+ * 🔥 HARD CORS FIX (Preflight-safe)
+ * This guarantees OPTIONS requests never fail on Render
+ */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://1films.netlify.app");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // ✅ Handle preflight explicitly
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
+// Body parsers
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
+// Routes
 import loanRoutes from "./Routes/loan.routes.js";
 import adminRoutes from "./Routes/admin.routes.js";
 
-// Mount the routes
-app.use("/api/v1/loans", loanRoutes);   // Handles all LAMF business
-app.use("/api/v1/admin", adminRoutes);  // Handles all Admin Auth
+app.use("/api/v1/loans", loanRoutes);
+app.use("/api/v1/admin", adminRoutes);
+
+// Optional health check
+app.get("/", (req, res) => {
+  res.send("Backend is running");
+});
+
+// Product seeding (unchanged)
 import { Product } from "./Models/Product.model.js";
 
 const initialProducts = [
@@ -45,10 +71,11 @@ export const seedProducts = async () => {
     const count = await Product.countDocuments();
     if (count === 0) {
       await Product.insertMany(initialProducts);
-      console.log("✅ Module 1: Loan Products seeded successfully!");
+      console.log("✅ Loan Products seeded successfully!");
     }
   } catch (error) {
     console.error("❌ Error seeding products:", error);
   }
 };
+
 export { app };
