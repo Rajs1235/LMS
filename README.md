@@ -1,123 +1,135 @@
-# LMS – 1Fi Loan Management System
+# 🚀 1Fi LMS – Loan Management System
 
-1Fi LMS is a backend-driven Loan Management System designed for NBFCs and fintech partners.  
-It enables secure loan applications backed by collateral, structured admin workflows, and automated email notifications on loan status updates.
-
----
-
-## 🚀 Key Features
-
-### 👤 Applicant / Fintech Partner
-- View available loan products
-- Apply for loans using collateral
-- Automatic LTV (Loan-to-Value) eligibility validation
-- Secure loan application submission
-
-### 🏦 Admin / NBFC
-- Create and manage loan products
-- View all loan applications
-- Update loan status:
-  - Pending
-  - Approved
-  - Rejected
-  - Hold
-  - Ongoing
-  - Completed
-- Automated email notifications on every status change
-- Safe handling of legacy records without email
-
-### ✉️ Email Automation
-- Email sent automatically when loan status is updated
-- Gmail SMTP (Port 587)
-- Fail-safe checks to prevent invalid email sends
+A full-stack **Loan Management System (LMS)** built as part of the **1Fi SDE Assignment**.  
+The project demonstrates backend API design, admin authentication, protected routes, and a modern React frontend.
 
 ---
 
-## 🛠 Tech Stack
+## 🧩 Tech Stack
+
+### Frontend
+- ⚛️ React (Vite)
+- 🧭 React Router
+- 🔗 Axios
+- 🎨 Tailwind CSS / UI components
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB (Mongoose)
-- Nodemailer
-- JWT Authentication
+- 🟢 Node.js
+- 🚏 Express.js
+- 🍃 MongoDB (Mongoose)
+- 🔐 JWT Authentication
+- 📧 Resend Email API (optional)
 
-### Frontend (separate repo)
-- React.js
-- Tailwind CSS
-- Axios
+### Deployment
+- **Backend:** Render  
+- **Frontend:** Vercel / Netlify
 
 ---
-## 📂 Backend Project Structure
 
-## backend/
-├── Controllers/
-│ └── loan.controller.js
-├── Models/
-│ ├── Application.model.js
-│ └── Product.model.js
-├── Routes/
-│ ├── loan.routes.js
-│ └── admin.routes.js
-├── middleware/
-│ └── Auth.middleware.js
-├── server.js
-└── package.json
+## ✨ Features
 
-Create a `.env` file in the backend root:
+### Public
+- 📦 View available loan products
+- 📝 Submit loan applications with collateral details
 
-## env
-PORT=8000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+### Admin (Protected)
+- 🔐 Admin login & registration
+- 📋 View all loan applications
+- 🔄 Update loan status (Pending / Approved / Rejected)
+- ➕ Add new loan products
+- 📧 Email notification on status update (demo-ready)
 
-EMAIL_USER=yourgmail@gmail.com
-EMAIL_PASS=your_gmail_app_password
+---
 
-##📡 API Endpoints
-Public
+## 📁 Project Structure
 
-GET /loan/product → Get all loan products
+```
+Backend/
+ ├── app.js
+ ├── index.js
+ ├── package.json
+ ├── Routes/
+ ├── Controllers/
+ ├── Models/
+ ├── middleware/
+ └── .env
 
-POST /loan/apply → Submit a loan application
+Frontend/
+ ├── package.json
+ ├── vite.config.js
+ └── src/
+     ├── main.jsx
+     ├── App.jsx
+     ├── services/
+     │   └── api.js
+     ├── pages/
+     └── components/
+         └── ui/
+```
 
-Admin (Protected)
+---
 
-POST /admin/login → Admin login
+## 🔐 Environment Variables
 
-GET /loan/list → View all applications
+### Backend (`Backend/.env`)
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/1fi_lms
+PORT=4000
+JWT_SECRET=your_secure_jwt_secret
+RESEND_API_KEY=rs_xxxxxxxxxxxx   # optional
+```
 
-PATCH /loan/update-status/:id → Update loan status
+### Frontend (`.env`)
+```env
+VITE_API_URL=https://lms-backend-thkb.onrender.com/api/v1
+```
 
-POST /loan/product → Create loan product
+---
 
-📬 Email Notification Logic
+## ⚙️ Local Setup
 
-Emails are sent only when the admin updates the loan status.
+### Backend
+```bash
+cd Backend
+npm install
+npm run dev
+```
 
-Triggered by:
+### Frontend
+```bash
+cd Frontend
+npm install
+npm run dev
+```
 
-PATCH /loan/update-status/:id
+---
 
+## 🔌 API Reference
 
-Email is sent for:
+**Base URL**
+```
+https://lms-backend-thkb.onrender.com/api/v1
+```
 
-Approved
+---
 
-Rejected
+## 🧪 Testing
 
-Hold
+- APIs tested using **Postman**
+- Frontend tested via browser flows
+- Backend logs monitored via **Render dashboard**
 
-Ongoing
+---
 
-Completed
+## ⚠️ Notes
 
-🧪 Validation & Safety
+- Email functionality uses **Resend (testing mode)**
+- Secrets are excluded using `.env` and `.gitignore`
+- Focus is on **clean architecture and correctness**
 
-LTV validation before loan creation
+---
 
-Email presence validation
+## 👨‍💻 Author
 
-SMTP verification before sending
-
-Safe guards for legacy data
+**Raj Srivastava**  
+SDE Assignment – 1Fi
