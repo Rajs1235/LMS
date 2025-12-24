@@ -151,12 +151,5 @@ Base URL:
 
 ---
 
-## ✅ Conclusion
-
-This project demonstrates:
-- Real‑world backend API design
-- Secure admin workflows
-- Frontend–backend integration
-- Practical handling of third‑party service limitations
-
+ 
 Thank you for reviewing 🙌
