@@ -1,5 +1,5 @@
 import express from "express";
- 
+ import cors from "cors";
 /**
  * 🔥 HARD CORS FIX (Preflight-safe)
  * This guarantees OPTIONS requests never fail on Render
