@@ -3,13 +3,14 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:5173','https://694b93cf622bb9ee950b2284--charming-sfogliatella-c05b17.netlify.app/' ],// Allow your Vite frontend
-  methods: ['GET', 'POST', 'PATCH', 'DELETE','PUT'],
+  origin: ['http://localhost:5173','https://694b93cf622bb9ee950b2284--charming-sfogliatella-c05b17.netlify.app' ],// Allow your Vite frontend
+  methods: ['GET', 'POST', 'PATCH', 'DELETE','PUT','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.options("*", cors());
+
 import loanRoutes from "./Routes/loan.routes.js";
 import adminRoutes from "./Routes/admin.routes.js";
 
