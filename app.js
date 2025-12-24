@@ -1,17 +1,32 @@
 import express from "express";
- import cors from "cors";
-/**
- * 🔥 HARD CORS FIX (Preflight-safe)
- * This guarantees OPTIONS requests never fail on Render
- */
+import cors from "cors";
+
 const app = express();
-app.use(cors({
-  origin: ['http://localhost:5173','https://lms-frontend-bm49.vercel.app/' ],// Allow your Vite frontend
-  methods: ['GET', 'POST', 'PATCH', 'DELETE','PUT','OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
- 
+
+/**
+ * ✅ FINAL CORS CONFIG (Render + Vercel safe)
+ */
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://lms-frontend-bm49.vercel.app"
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// Apply CORS to all requests
+app.use(cors(corsOptions));
+
+// ✅ HARD FIX: Handle preflight explicitly (Node 22 safe)
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
@@ -22,12 +37,12 @@ import adminRoutes from "./Routes/admin.routes.js";
 app.use("/api/v1/loans", loanRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
-// Optional health check
+// Health check
 app.get("/", (req, res) => {
   res.send("Backend is running");
 });
 
-// Product seeding (unchanged)
+// Product seeding
 import { Product } from "./Models/Product.model.js";
 
 const initialProducts = [
