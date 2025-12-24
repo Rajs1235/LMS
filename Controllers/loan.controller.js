@@ -1,84 +1,70 @@
 import { Application } from "../Models/Application.model.js";
 import { Product } from "../Models/Product.model.js";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
- * Helper for sending emails
- * Wrapped in a safety check to ensure it doesn't crash the main thread
+ * Helper for sending emails (Render-safe via Email API)
+ * Will NOT block the main request thread
  */
 const sendStatusEmail = async (userEmail, name, status) => {
   console.log("DEBUG: Attempting to send email to:", userEmail);
 
-  // 🛑 FINAL SAFETY GUARD (CRITICAL)
+  // 🛑 SAFETY GUARD
   if (!userEmail) {
     console.warn("EMAIL SKIPPED: No email found for applicant:", name);
     return;
   }
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
-  });
-
-  await transporter.verify();
-  console.log("SMTP CONNECTION OK");
-
   try {
-    const info = await transporter.sendMail({
-      from: `"1Fi LMS" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "1Fi LMS <onboarding@resend.dev>",
       to: userEmail,
       subject: `Loan Application ${status}`,
-    html: `
-<div style="font-family: Arial, sans-serif; color: #1f2937;">
-  <h2 style="color:#4f46e5;">Loan Application Status Update</h2>
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #1f2937;">
+          <h2 style="color:#4f46e5;">Loan Application Status Update</h2>
 
-  <p>Dear <strong>${name}</strong>,</p>
+          <p>Dear <strong>${name}</strong>,</p>
 
-  <p>
-    We hope this message finds you well.
-    <br /><br />
-    This is to inform you that the status of your loan application has been updated.
-  </p>
+          <p>
+            We hope this message finds you well.
+            <br /><br />
+            This is to inform you that the status of your loan application has been updated.
+          </p>
 
-  <p style="font-size:16px;">
-    <strong>Current Status:</strong>
-    <span style="color:#4f46e5;">${status}</span>
-  </p>
+          <p style="font-size:16px;">
+            <strong>Current Status:</strong>
+            <span style="color:#4f46e5;">${status}</span>
+          </p>
 
-  <p>
-    Our team has reviewed your application. If any further action is required,
-    we will reach out to you.
-  </p>
+          <p>
+            Our team has reviewed your application. If any further action is required,
+            we will reach out to you.
+          </p>
 
-  <p>
-    Thank you for choosing <strong>1Fi LMS</strong>.
-  </p>
+          <p>
+            Thank you for choosing <strong>1Fi LMS</strong>.
+          </p>
 
-  <p style="margin-top:30px;">
-    Warm regards,<br />
-    <strong>1Fi LMS Team</strong>
-  </p>
+          <p style="margin-top:30px;">
+            Warm regards,<br />
+            <strong>1Fi LMS Team</strong>
+          </p>
 
-  <hr />
-  <p style="font-size:12px;color:#6b7280;">
-    This is an automated notification. Please do not reply to this email.
-  </p>
-</div>
-`
-
+          <hr />
+          <p style="font-size:12px;color:#6b7280;">
+            This is an automated notification. Please do not reply to this email.
+          </p>
+        </div>
+      `
     });
 
-    console.log("DEBUG: Email sent successfully!", info.messageId);
+    console.log("✅ Email sent successfully via Resend");
   } catch (error) {
-    console.error("DEBUG: SMTP ERROR:", error.message);
+    console.error("❌ Email API error:", error);
   }
 };
 
@@ -179,7 +165,7 @@ export const getAllProducts = async (req, res) => {
 
 /**
  * Module 5: Administrative Powers (Status Transitions)
- * Handles KYC verification and Final Approval with automated email notification
+ * Triggers email notification on status change
  */
 export const updateLoanStatus = async (req, res) => {
   try {
