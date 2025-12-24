@@ -3,7 +3,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:5173', // Allow your Vite frontend
+  origin: ['http://localhost:5173','https://agent-694b8d9f91fd--charming-sfogliatella-c05b17.netlify.app/' ],// Allow your Vite frontend
   methods: ['GET', 'POST', 'PATCH', 'DELETE','PUT'],
   credentials: true
 }));
