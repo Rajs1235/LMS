@@ -20,7 +20,7 @@ const sendStatusEmail = async (userEmail, name, status) => {
 
   try {
     await resend.emails.send({
-      from: "1Fi LMS <onboarding@resend.dev>",
+      from: "onboarding@resend.dev",
       to: userEmail,
       subject: `Loan Application ${status}`,
       html: `
