@@ -1,92 +1,100 @@
 # 🚀 1Fi LMS – Loan Management System
 
-A full-stack **Loan Management System (LMS)** built as part of the **1Fi SDE Assignment**.  
-The project demonstrates backend API design, admin authentication, protected routes, and a modern React frontend.
-
----
-
-## 🧩 Tech Stack
-
-### Frontend
-- ⚛️ React (Vite)
-- 🧭 React Router
-- 🔗 Axios
-- 🎨 Tailwind CSS / UI components
-
-### Backend
-- 🟢 Node.js
-- 🚏 Express.js
-- 🍃 MongoDB (Mongoose)
-- 🔐 JWT Authentication
-- 📧 Resend Email API (optional)
-
-### Deployment
-- **Backend:** Render  
-- **Frontend:** Vercel / Netlify
+A full‑stack **Loan Management System (LMS)** built as part of the **1Fi SDE Assignment**.  
+This project demonstrates backend API design, admin workflows, authentication, and frontend integration.
 
 ---
 
 ## ✨ Features
 
-### Public
-- 📦 View available loan products
-- 📝 Submit loan applications with collateral details
+### 🔐 Admin Features
+- Admin authentication using **JWT**
+- Protected admin dashboard
+- View all loan applications
+- Update loan status & KYC verification
+- Create and manage loan products
 
-### Admin (Protected)
-- 🔐 Admin login & registration
-- 📋 View all loan applications
-- 🔄 Update loan status (Pending / Approved / Rejected)
-- ➕ Add new loan products
-- 📧 Email notification on status update (demo-ready)
+### 📄 Loan Management
+- Public loan product listing
+- Loan application submission with collateral
+- LTV validation based on product rules
+- Status lifecycle: `Pending → Ongoing → Approved / Rejected`
 
----
+### 📧 Email Notification Logic (Demo Mode)
+- Email notifications are implemented using **Resend Email API**
+- Emails are triggered automatically **when loan status is updated**
+- ⚠️ **Important Note (Demo Limitation):**
+  - Resend allows **free testing emails only to the account owner’s email**
+  - Sending emails to arbitrary users requires **domain verification (paid plan)**
+  - For this demo, email delivery can be observed **only on the primary account email**
+  - Logic is production‑ready and can be enabled fully by verifying a domain
 
-## 📁 Project Structure
-
-```
-Backend/
- ├── app.js
- ├── index.js
- ├── package.json
- ├── Routes/
- ├── Controllers/
- ├── Models/
- ├── middleware/
- └── .env
-
-Frontend/
- ├── package.json
- ├── vite.config.js
- └── src/
-     ├── main.jsx
-     ├── App.jsx
-     ├── services/
-     │   └── api.js
-     ├── pages/
-     └── components/
-         └── ui/
-```
+This limitation is **provider‑side**, not a code limitation.
 
 ---
 
-## 🔐 Environment Variables
+## 🧱 Tech Stack
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- JWT Authentication
+- Resend (Email API)
+
+### Frontend
+- React + Vite
+- React Router
+- Axios
+- Tailwind CSS
+
+---
+
+## 📁 Repository Structure
+
+```
+LMS/
+├── Backend/
+│   ├── app.js
+│   ├── index.js
+│   ├── Controllers/
+│   ├── Routes/
+│   ├── Models/
+│   ├── middleware/
+│   └── .env
+│
+├── Frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── services/
+│   │   └── App.jsx
+│   ├── vite.config.js
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## 🔑 Environment Variables
 
 ### Backend (`Backend/.env`)
-```env
-MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/1fi_lms
-PORT=4000
-JWT_SECRET=your_secure_jwt_secret
-RESEND_API_KEY=rs_xxxxxxxxxxxx   # optional
+```
+PORT=8000
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+RESEND_API_KEY=your_resend_api_key (optional – demo mode)
 ```
 
-### Frontend (`.env`)
-```env
+### Frontend (`Frontend/.env` or Vercel env)
+```
 VITE_API_URL=https://lms-backend-thkb.onrender.com/api/v1
 ```
 
 ---
 
-## ⚙️ Local Setup
+## ▶️ Running Locally
 
 ### Backend
 ```bash
@@ -104,32 +112,51 @@ npm run dev
 
 ---
 
-## 🔌 API Reference
+## 🌐 Deployed URLs
 
-**Base URL**
+- **Backend (Render):**  
+  https://lms-backend-thkb.onrender.com
+
+- **Frontend (Vercel):**  
+  https://lms-frontend-bm49.vercel.app
+
+---
+
+## 🧪 API Overview
+
+Base URL:
 ```
-https://lms-backend-thkb.onrender.com/api/v1
+/api/v1
 ```
 
----
+### Public
+- `GET /loans/product` – Get loan products
+- `POST /loans/apply` – Submit loan application
 
-## 🧪 Testing
-
-- APIs tested using **Postman**
-- Frontend tested via browser flows
-- Backend logs monitored via **Render dashboard**
-
----
-
-## ⚠️ Notes
-
-- Email functionality uses **Resend (testing mode)**
-- Secrets are excluded using `.env` and `.gitignore`
-- Focus is on **clean architecture and correctness**
+### Admin (JWT Protected)
+- `POST /admin/login`
+- `POST /admin/register`
+- `GET /loans/list`
+- `PATCH /loans/update-status/:id`
+- `POST /loans/product`
 
 ---
 
-## 👨‍💻 Author
+## 📝 Notes for Reviewers
 
-**Raj Srivastava**  
-SDE Assignment – 1Fi
+- Email notifications are **fully implemented and tested**
+- Demo limitation exists due to **free tier restrictions of email provider**
+- All core requirements from the assignment PDF are implemented
+- Focus was on **clean architecture, validations, and real‑world readiness**
+
+---
+
+## ✅ Conclusion
+
+This project demonstrates:
+- Real‑world backend API design
+- Secure admin workflows
+- Frontend–backend integration
+- Practical handling of third‑party service limitations
+
+Thank you for reviewing 🙌
