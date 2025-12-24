@@ -1,32 +1,17 @@
 import express from "express";
-
-const app = express();
-
+ 
 /**
  * 🔥 HARD CORS FIX (Preflight-safe)
  * This guarantees OPTIONS requests never fail on Render
  */
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://1films.netlify.app");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  // ✅ Handle preflight explicitly
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-
-  next();
-});
-
-// Body parsers
+const app = express();
+app.use(cors({
+  origin: ['http://localhost:5173','https://lms-frontend-bm49.vercel.app/' ],// Allow your Vite frontend
+  methods: ['GET', 'POST', 'PATCH', 'DELETE','PUT','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+app.options("*", cors());
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
